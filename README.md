@@ -1,7 +1,4 @@
-¡Claro! Aquí tienes todo el contenido en un solo bloque para que puedas copiar y pegar directamente en tu archivo `README.md`:
 
-```markdown
-# Servidor Samba: Compartición de Archivos y Recursos en Redes Heterogéneas
 
 ## ¿Qué es Samba?
 
