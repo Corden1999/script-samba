@@ -25,3 +25,14 @@ sudo bash -c 'cat >> /etc/samba/smb.conf' <<EOF
    browsable = yes
    read only = no
 EOF
+
+#Reiniciar el servicio de samba
+echo "Reiniciando el servivio de samba..."
+sudo systemctl restart smbd
+
+# Verificar el estado del servicio
+echo "Verificando el estado del servicio Samba..."
+sudo systemctl status smbd
+
+echo "Instalación y configuración de Samba completada."
+echo "El directorio compartido está en: $ruta"
