@@ -1,0 +1,16 @@
+- name: Instalar y configurar Samba en Ubuntu
+  become: yes
+  task:
+    - name: Instalar Samba y configurar samba
+      apt: name=Samba update_cache=yes state=latest 
+
+    - name: Crear directorio compartido
+      file: path="{{ Carpeta }}" state=directory mode='0775' owner=root group=root
+
+    - name: Configurar samba
+      blockinfile: path=/etc/samba/smb.conf
+        block: |
+          [Sambac]
+          comment = Esto es samba instalado en ubuntu
+          path
+      
