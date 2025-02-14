@@ -1,0 +1,29 @@
+- name: Instalar y configurar Samba en Ubuntu
+  become: yes
+  task:
+    - name: Instalar Samba y configurar samba
+      apt: name=Samba update_cache=yes state=latest 
+
+    - name: Crear directorio compartido
+      file: path="{{ carpeta }}" state=directory mode='0775' owner=root group=root
+
+    - name: Configurar samba
+      blockinfile: path=/etc/samba/smb.conf
+        block: |
+          [Sambac]
+          comment = Esto es samba instalado en ubuntu
+          path = {{ carpeta }}
+          read only = no
+          browsable = yes
+
+    - name: Anadir usuario de samba
+      user: name="{{ usuario }}" state=present create_home=no shell=/usr/sbin/nologin
+
+    - name: Establecer contrasena
+      shell: "echo -e '{{ password }}\n{{ password }}' | smbpasswd -a -s {{ usuario }}"
+      args: executable=/bin/bash
+
+    - name: Reiniciar
+      service: name=smbd state=restarted enabled=yes
+      
+      
