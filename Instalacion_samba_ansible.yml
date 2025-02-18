@@ -1,29 +1,54 @@
+---
 - name: Instalar y configurar Samba en Ubuntu
+  hosts: all
   become: yes
+  vars:
+    nombre: "mis_archivos"
+    ruta: "/srv/samba/share"
+    usuario: "usuario_samba"
+    contrasena: "contraseña_segura"
+    
   task:
-    - name: Instalar Samba y configurar samba
-      apt: name=Samba update_cache=yes state=latest 
+    - name: Instalar Samba
+      apt: 
+        name: Samba 
+        update_cache: yes 
+        state: latest 
 
     - name: Crear directorio compartido
-      file: path="{{ carpeta }}" state=directory mode='0775' owner=root group=root
+      file: 
+        path: "{{ ruta }}" 
+        state: directory 
+        mode: '0775' 
+        owner: root 
+        group: root
 
     - name: Configurar samba
-      blockinfile: path=/etc/samba/smb.conf
+      blockinfile: 
+        path: /etc/samba/smb.conf
         block: |
-          [Sambac]
-          comment = Esto es samba instalado en ubuntu
-          path = {{ carpeta }}
-          read only = no
-          browsable = yes
+          [{{ nombre }}]
+            path = {{ ruta }}
+            browseable = yes
+            writable = yes
+            create mask = 0775
+            directory mask = 0775
+            valid users = {{ usuario }}
 
     - name: Anadir usuario de samba
-      user: name="{{ usuario }}" state=present create_home=no shell=/usr/sbin/nologin
+      user: 
+        name: "{{ usuario }}" 
+        state: present 
+        create_home: no 
+        shell: /usr/sbin/nologin
 
     - name: Establecer contrasena
-      shell: "echo -e '{{ password }}\n{{ password }}' | smbpasswd -a -s {{ usuario }}"
-      args: executable=/bin/bash
+      shell: "echo -e '{{ contrasena }}\n{{ contrasena }}' | smbpasswd -a -s {{ usuario }}"
+      args: 
+        executable: /bin/bash
 
     - name: Reiniciar
-      service: name=smbd state=restarted enabled=yes
-      
-      
+      service: 
+        name: smbd 
+        state: restarted 
+        enabled: yes
