@@ -98,6 +98,6 @@ while true; do
             ;;
     esac
 
-    # Esperar a que el usuario presione Enter para continuar
+    # let him/her cook
     read -p "Presione Enter para continuar..."
 done
