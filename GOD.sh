@@ -50,11 +50,11 @@ while true; do
             read -p "Ingrese su opción (1-3): " option
             case $option in
                 1)
-                
+                    ;;
                 2)
-                
+                    ;;
                 3)
-                
+                    ;;
             ;;
         2)
             echo -e "${RED}eliminación del servicio...${NC}"
@@ -79,11 +79,11 @@ while true; do
             read -p "Ingrese su opción (1-3): " option
             case $option in
                 1)
-                
+                    ;;
                 2)
-                
+                    ;;
                 3)
-                
+                    ;;
             ;;
         6)
             echo -e "${YELLOW}Editando la configuración de Samba...${NC}"
