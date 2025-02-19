@@ -55,7 +55,6 @@ while true; do
                     ;;
                 3)
                     ;;
-            ;;
         2)
             echo -e "${RED}eliminación del servicio...${NC}"
             sudo apt remove --purge samba -y
@@ -84,7 +83,6 @@ while true; do
                     ;;
                 3)
                     ;;
-            ;;
         6)
             echo -e "${YELLOW}Editando la configuración de Samba...${NC}"
             sudo nano /etc/samba/smb.conf
