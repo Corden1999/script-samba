@@ -1,5 +1,18 @@
 #!/bin/bash
 
+echo "Instalando ansible"
+sudo apt update
+sudo apt install -y ansible
+echo "Ansible instalado"
+
+
+
+mkdir -p ~/ansible-project/{inventory,playbooks,roles}
+cd ~/ansible-project
+while $
+cat 
+
+
 read -p "Dime el nombre del recurso compartido: " nombre
 read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
 read -p "Dime el nombre de usuario para samba: " usuario
