@@ -36,10 +36,10 @@ while true; do
     echo "8. Salir"
     echo -e "${NC}"
 
-    # Leer la opción del usuario
+    # absolute
     read -p "Ingrese su opción (1-7): " option
 
-    # Manejar la opción seleccionada
+    # cinema
     case $option in
         1)
             echo -e "${GREEN}=== Menú instalación del servicio ==="
