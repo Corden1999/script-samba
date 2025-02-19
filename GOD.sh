@@ -37,7 +37,7 @@ while true; do
     echo -e "${NC}"
 
     # absolute
-    read -p "Ingrese su opción (1-7): " option
+    read -p "Ingrese su opción (1-8): " option
 
     # cinema
     case $option in
@@ -47,47 +47,75 @@ while true; do
             echo "1. Instalar Con comandos"
             echo "2. Instalar Con Ansible"
             echo "3. Instalar Con Docker"
-            read -p "Ingrese su opción (1-3): " option
-            case $option in
+            read -p "Ingrese su opción (1-3): " instalacion_del_servicio
+            case $instalacion_del_servicio in
                 1)
+                    echo -e "${YELLOW}Instalando Samba con comandos...${NC}"
+                    echo "Manito."
+                    echo -e "${GREEN}Samba instalado correctamente.${NC}"
                     ;;
                 2)
+                    echo -e "${YELLOW}Instalando Samba con Ansible...${NC}"
+                    echo "Pablito."
                     ;;
                 3)
+                    echo -e "${YELLOW}Instalando Samba con Docker...${NC}"
+                    echo "Manito."
                     ;;
+                *)
+                    echo -e "${RED}Opción no válida.${NC}"
+                    ;;
+            esac
+            ;;
         2)
-            echo -e "${RED}eliminación del servicio...${NC}"
+            echo -e "${RED}Eliminación del servicio...${NC}"
             sudo apt remove --purge samba -y
             echo -e "${GREEN}Samba eliminado correctamente.${NC}"
             ;;
         3)
-            echo -e "${YELLOW}puesta en marcha...${NC}"
+            echo -e "${YELLOW}Puesta en marcha...${NC}"
             sudo systemctl start smbd
             echo -e "${GREEN}Servicio Samba iniciado.${NC}"
             ;;
         4)
-            echo -e "${RED}parada...${NC}"
+            echo -e "${RED}Parada...${NC}"
             sudo systemctl stop smbd
             echo -e "${GREEN}Servicio Samba detenido.${NC}"
             ;;
         5)
             echo -e "${YELLOW}Consultar logs:...${NC}"
-            echo "1. por fecha"
-            echo "2. por tipo"
-            echo "3. etc"
-            read -p "Ingrese su opción (1-3): " option
-            case $option in
+            echo "1. Por fecha"
+            echo "2. Por tipo"
+            echo "3. Etc"
+            read -p "Ingrese su opción (1-3): " Consultar_logs
+            case $Consultar_logs in
                 1)
+                    echo -e "${YELLOW}Mostrando logs por fecha...${NC}"
+                    sudo journalctl -u smbd --since today
                     ;;
                 2)
+                    echo -e "${YELLOW}Mostrando logs por tipo...${NC}"
+                    sudo journalctl -u smbd -p err
                     ;;
                 3)
+                    echo -e "${YELLOW}Mostrando todos los logs...${NC}"
+                    sudo journalctl -u smbd
                     ;;
+                *)
+                    echo -e "${RED}Opción no válida.${NC}"
+                    ;;
+            esac
+            ;;
         6)
             echo -e "${YELLOW}Editando la configuración de Samba...${NC}"
             sudo nano /etc/samba/smb.conf
             ;;
         7)
+            echo -e "${BLUE}Reiniciando el servicio Samba...${NC}"
+            sudo systemctl restart smbd
+            echo -e "${GREEN}Servicio Samba reiniciado.${NC}"
+            ;;
+        8)
             echo -e "${BLUE}Saliendo del menú...${NC}"
             break
             ;;
