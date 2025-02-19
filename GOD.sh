@@ -5,11 +5,11 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
-NC='\033[0m' # No Color
+NC='\033[0m' 
 
 while true; do
     # info red
-    echo -e "${BLUE}=== Datos de red ==="
+    echo -e "${BLUE}=== Datos de red de tu equipo  ==="
     echo -e "IP Local: $(hostname -I | xargs)"
     echo -e "Hostname: $(hostname)"
     echo -e "Interfaces de red:"
@@ -24,7 +24,7 @@ while true; do
     fi
 
     # happy meal
-    echo -e "${GREEN}=== Menú Samba ==="
+    echo -e "${GREEN}=== Menú script ==="
     echo "Seleccione el número de la acción que quiere realizar:"
     echo "1. Instalar Samba"
     echo "2. Eliminar Samba"
@@ -42,25 +42,27 @@ while true; do
     # cinema
     case $option in
         1)
-            echo -e "${GREEN}=== Menú instalación del servicio ==="
+            echo -e "${GREEN}=== Menú instalación ==="
             echo "Seleccione el número de la acción que quiere realizar:"
             echo "1. Instalar Con comandos"
             echo "2. Instalar Con Ansible"
             echo "3. Instalar Con Docker"
-            read -p "Ingrese su opción (1-3): " instalacion_del_servicio
+            read -p "Ingrese su opción (1-4): " instalacion_del_servicio
             case $instalacion_del_servicio in
                 1)
-                    echo -e "${YELLOW}Instalando Samba con comandos...${NC}"
+                    echo -e "${YELLOW}Instalando Samba Con comandos...${NC}"
                     echo "Manito."
                     echo -e "${GREEN}Samba instalado correctamente.${NC}"
                     ;;
                 2)
-                    echo -e "${YELLOW}Instalando Samba con Ansible...${NC}"
+                    echo -e "${YELLOW}Instalando Samba Con Ansible...${NC}"
                     echo "Pablito."
+                    echo -e "${GREEN}Samba instalado correctamente.${NC}"
                     ;;
                 3)
-                    echo -e "${YELLOW}Instalando Samba con Docker...${NC}"
+                    echo -e "${YELLOW}Instalando Samba Con Docker...${NC}"
                     echo "Manito."
+                    echo -e "${GREEN}Samba instalado correctamente.${NC}"
                     ;;
                 *)
                     echo -e "${RED}Opción no válida.${NC}"
