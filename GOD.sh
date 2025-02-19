@@ -1,17 +1,31 @@
+#!/bin/bash
+
+# Definir colores
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
-NC='\033[0m'
+NC='\033[0m' # No Color
 
+while true; do
+    # info red
+    echo -e "${BLUE}=== Datos de red ==="
+    echo -e "IP Local: $(hostname -I | xargs)"
+    echo -e "Hostname: $(hostname)"
+    echo -e "Interfaces de red:"
+    ip -o -4 addr show | awk '{printf "   %-7s %s\n", $2":", $4}'
+    echo -e "${NC}"
 
-show_menu() {
-    clear
-    network_info
-    service_status
-    
+    # status
+    if systemctl is-active smbd &> /dev/null; then
+        echo -e "${GREEN}El servicio Samba está en ejecución.${NC}"
+    else
+        echo -e "${RED}El servicio Samba no está en ejecución.${NC}"
+    fi
+
+    # happy meal
     echo -e "${GREEN}=== Menú Samba ==="
-     echo "Seleccione el numero de la accion que quiere realizar"
+    echo "Seleccione el número de la acción que quiere realizar:"
     echo "1. Instalar Samba"
     echo "2. Eliminar Samba"
     echo "3. Iniciar servicio"
@@ -21,4 +35,69 @@ show_menu() {
     echo "7. Reiniciar servicio"
     echo "8. Salir"
     echo -e "${NC}"
-}
+
+    # Leer la opción del usuario
+    read -p "Ingrese su opción (1-7): " option
+
+    # Manejar la opción seleccionada
+    case $option in
+        1)
+            echo -e "${GREEN}=== Menú instalación del servicio ==="
+            echo "Seleccione el número de la acción que quiere realizar:"
+            echo "1. Instalar Con comandos"
+            echo "2. Instalar Con Ansible"
+            echo "3. Instalar Con Docker"
+            read -p "Ingrese su opción (1-3): " option
+            case $option in
+                1)
+                
+                2)
+                
+                3)
+                
+            ;;
+        2)
+            echo -e "${RED}eliminación del servicio...${NC}"
+            sudo apt remove --purge samba -y
+            echo -e "${GREEN}Samba eliminado correctamente.${NC}"
+            ;;
+        3)
+            echo -e "${YELLOW}puesta en marcha...${NC}"
+            sudo systemctl start smbd
+            echo -e "${GREEN}Servicio Samba iniciado.${NC}"
+            ;;
+        4)
+            echo -e "${RED}parada...${NC}"
+            sudo systemctl stop smbd
+            echo -e "${GREEN}Servicio Samba detenido.${NC}"
+            ;;
+        5)
+            echo -e "${YELLOW}Consultar logs:...${NC}"
+            echo "1. por fecha"
+            echo "2. por tipo"
+            echo "3. etc"
+            read -p "Ingrese su opción (1-3): " option
+            case $option in
+                1)
+                
+                2)
+                
+                3)
+                
+            ;;
+        6)
+            echo -e "${YELLOW}Editando la configuración de Samba...${NC}"
+            sudo nano /etc/samba/smb.conf
+            ;;
+        7)
+            echo -e "${BLUE}Saliendo del menú...${NC}"
+            break
+            ;;
+        *)
+            echo -e "${RED}Opción no válida. Intente de nuevo.${NC}"
+            ;;
+    esac
+
+    # Esperar a que el usuario presione Enter para continuar
+    read -p "Presione Enter para continuar..."
+done
