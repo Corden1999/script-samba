@@ -93,7 +93,7 @@ while true; do
             case $Consultar_logs in
                 1)
                     echo -e "${YELLOW}Mostrando logs por fecha...${NC}"
-                    sudo journalctl -u smbd --since today
+                    sudo journalctl -u smbd --since yesterday
                     ;;
                 2)
                     echo -e "${YELLOW}Mostrando logs por tipo...${NC}"
