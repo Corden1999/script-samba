@@ -52,6 +52,9 @@ EOF
     # Mensaje final
     echo 'Instalación y configuración de Samba completada dentro del contenedor.';
     echo 'El directorio compartido está en: /shared_folder';
+
+    #Mantener el contenedor en ejecucion
+    tail -f /dev/null
 "
 
 # Mensaje final fuera del contenedor
