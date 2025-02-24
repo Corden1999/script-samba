@@ -1,10 +1,26 @@
 #!/bin/bash
 
-echo "Instalando ansible"
-sudo apt update
-sudo apt install -y ansible
-echo "Ansible instalado"
+if command -v ansible &> /dev/null; then
+  echo "Ansible esta instalado"
+  ansible --version
+  read -p "¿Desea hacer la configuración? (y-n) " configurar
+  configurar=${configurar:-n}
+  if [[ ! $configurar =~ ^[Yy]$ ]]; then
+    echo "Salienddo"
+    exit 0
+  fi
+else
+  echo "Instalando ansible"
+  sudo apt update
+  sudo apt install -y ansible
 
+  if command -v ansible &> /dev/null; then
+    echo "Ansible instalado"
+  else
+    echo "Error: No se ha podido instalar"
+    exit 1
+  fi
+fi
 
 
 mkdir -p ~/ansible-project/{inventory,playbooks,roles}
