@@ -98,7 +98,7 @@ while true; do
 
                     #Configurar Samba para compartir la carpeta
                     echo "configurando samba..."
-                    sudo bash -c 'cat >> /etc/samba/smb.conf' <<EOF
+                    sudo bash -c 'cat >> /etc/samba/smb.conf' << EOF
                     [Carpeta_compartida]
                     comment = samba grupo cristian, pablo y mario
                     path = $ruta
