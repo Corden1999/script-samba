@@ -23,11 +23,28 @@ else
 fi
 echo "Iniciando configuración";
 
-read -p "Dime el nombre del recurso compartido: " nombre
-read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
-read -p "Dime el nombre de usuario para samba: " usuario
-read -p "Dime la contraseña para el usuario: " contrasena
+read -p "Dime el directorio del inventario" inventario
+read -p "¿Quieres agregar host?" host
+host=${host:-y}
 
+if [[ $host =~ ^[Yy]$ ]]; then
+
+  while true; do
+        read -p "Dime el nombre del grupo ('exit' para salir): " grupo
+        if [[ "$grupo" == "exit" ]]; then
+            break
+        fi
+        echo "[$grupo]" >> "$inventario
+        while true; do
+            read -p "Dime la IP o el nombre del host ('exit' para salir del grupo): " ip
+            if [[ "$ip" == "exit" ]]; then
+                break
+            fi
+            echo "$ip" >> "$inventario"
+        done
+        echo "" >> "$inventario"
+    done
+  echo "Archivo de host creado"
 echo "Crear archivo de configuración"
 cat << EOF > ansible.cfg
 [$nombre]
@@ -36,6 +53,11 @@ remote_user = $remote_user
 EOF
 
 echo "Ansible configurado"
+
+read -p "Dime el nombre del recurso compartido: " nombre
+read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
+read -p "Dime el nombre de usuario para samba: " usuario
+read -p "Dime la contraseña para el usuario: " contrasena
 
 if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
   echo "Tiene algun valor vacio"
