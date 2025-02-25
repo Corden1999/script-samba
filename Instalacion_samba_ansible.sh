@@ -7,7 +7,22 @@ if command -v ansible &> /dev/null; then
   configurar=${configurar:-n}
   if [[ ! $configurar =~ ^[Yy]$ ]]; then
     echo "Salienddo"
-    exit 0
+    echo "Configuración e instalación de samba"
+
+      read -p "Dime el nombre del recurso compartido: " nombre
+      read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
+      read -p "Dime el nombre de usuario para samba: " usuario
+      read -p "Dime la contraseña para el usuario: " contrasena
+      
+      if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
+        echo "Tiene algun valor vacio"
+      else
+        ansible-playbook Instalacion_samba_ansible.yml --ask-become-pass \
+        -e "nombre=$nombre" \
+        -e "ruta=$ruta" \
+        -e "usuario=$usuario" \
+        -e "contrasena=$contrasena"
+     fi
   fi
 else
   echo "Instalando ansible"
@@ -24,6 +39,7 @@ fi
 echo "Iniciando configuración";
 
 read -p "Dime el directorio del inventario" inventario
+inventario=${./inventory/hosts}
 read -p "¿Quieres agregar host?" host
 host=${host:-y}
 
@@ -44,29 +60,17 @@ if [[ $host =~ ^[Yy]$ ]]; then
         done
         echo "" >> "$inventario"
     done
+    
   echo "Archivo de host creado"
+  
 echo "Crear archivo de configuración"
+read -p "Que usuario quieres para aceder en remoto" usuario
+usuario=${usuario:-root}
 cat << EOF > ansible.cfg
-[$nombre]
-inventory = $inventory_path
-remote_user = $remote_user
+[defaults]
+inventory = $inventario
+remote_user = $usuario
 EOF
 
-echo "Ansible configurado"
+echo "Ansible instalado y configurado correctamente"
 
-read -p "Dime el nombre del recurso compartido: " nombre
-read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
-read -p "Dime el nombre de usuario para samba: " usuario
-read -p "Dime la contraseña para el usuario: " contrasena
-
-if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
-  echo "Tiene algun valor vacio"
-else
-  ansible-playbook Instalacion_samba_ansible.yml --ask-become-pass \
-  -e "nombre=$nombre" \
-  -e "ruta=$ruta" \
-  -e "usuario=$usuario" \
-  -e "contrasena=$contrasena"
-  
-  
-fi
