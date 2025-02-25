@@ -1,4 +1,4 @@
-ho#!/bin/bash
+#!/bin/bash
 
 if command -v ansible &> /dev/null; then
   echo "Ansible esta instalado"
@@ -28,7 +28,14 @@ read -p "Dime la ubicación del recurso que desea compartir (No tiene por que ex
 read -p "Dime el nombre de usuario para samba: " usuario
 read -p "Dime la contraseña para el usuario: " contrasena
 
+echo "Crear archivo de configuración"
+cat << EOF > ansible.cfg
+[$nombre]
+inventory = $inventory_path
+remote_user = $remote_user
+EOF
 
+echo "Ansible configurado"
 
 if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
   echo "Tiene algun valor vacio"
