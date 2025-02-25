@@ -25,12 +25,12 @@ AZUL='\033[1;94m'
 RESET='\033[0m'          
 
 # ;40m fondo negro ;44 fondo azul 
-BLANCO_SOBRE_AZUL='\033[1;97;44m'   # Blanco brillante sobre azul oscuro
-AMARILLO_SOBRE_NEGRO='\033[1;93;40m' # Amarillo sobre negro
-CIAN_SOBRE_NEGRO='\033[1;96;40m'     # Cian sobre negro
-VERDE_SOBRE_NEGRO='\033[1;92;40m'    # Verde sobre negro
-ROJO_SOBRE_NEGRO='\033[1;91;40m'     # Rojo sobre negro
-MAGENTA_SOBRE_NEGRO='\033[1;95;40m'  # Magenta sobre negro
+BLANCO_SOBRE_AZUL='\033[1;97;44m'   
+AMARILLO_SOBRE_NEGRO='\033[1;93;40m' 
+CIAN_SOBRE_NEGRO='\033[1;96;40m'    
+VERDE_SOBRE_NEGRO='\033[1;92;40m' 
+ROJO_SOBRE_NEGRO='\033[1;91;40m'     
+MAGENTA_SOBRE_NEGRO='\033[1;95;40m'
 
 # Función para limpiar la pantalla
 limpiar_pantalla() {
@@ -41,21 +41,21 @@ while true; do
     limpiar_pantalla
 
     # Información de red
-    echo -e "${INFO} ${BLANCO_SOBRE_AZUL}=== Información de Red de tu Equipo ===${RESET}"
+    echo -e "${INFO} ${BLANCO_SOBRE_AZUL}=== Información de red de tu PC ===${RESET}"
     echo -e "${BLANCO}IP Local:${RESET} $(hostname -I | xargs)"
     echo -e "${BLANCO}Nombre del Equipo:${RESET} $(hostname)"
     echo -e "${BLANCO}Interfaces de Red:${RESET}"
     ip -o -4 addr show | awk '{printf "   %-7s %s\n", $2":", $4}'
 
-    # Estado del servicio Samba
+    # status
     if systemctl is-active smbd &> /dev/null; then
         echo -e "${CHECK_MARK} ${VERDE}El servicio Samba está en ejecución.${RESET}"
     else
         echo -e "${CROSS_MARK} ${ROJO}El servicio Samba no está en ejecución.${RESET}"
     fi
 
-    # Menú principal
-    echo -e "${MENU} ${CIAN_SOBRE_NEGRO}=== Menú Principal ===${RESET}"
+    # Menu
+    echo -e "${MENU} ${CIAN_SOBRE_NEGRO}=== Menú ===${RESET}"
     echo "Seleccione el número de la acción que desea realizar:"
     echo -e "${AMARILLO}1. Instalar Samba ${INSTALAR}${RESET}"
     echo -e "${AMARILLO}2. Eliminar Samba ${ELIMINAR}${RESET}"
@@ -71,13 +71,13 @@ while true; do
 
     case $opcion in
         1)
-            echo -e "${INSTALAR} ${MAGENTA_SOBRE_NEGRO}=== Menú de Instalación ===${RESET}"
+            echo -e "${INSTALAR} ${MAGENTA_SOBRE_NEGRO}=== Menú de instalación ===${RESET}"
             echo "Seleccione el método de instalación:"
             echo -e "${CIAN}1. Instalar usando comandos manuales${RESET}"
             echo -e "${CIAN}2. Instalar usando Ansible${RESET}"
             echo -e "${CIAN}3. Instalar usando Docker${RESET}"
-            read -p "Ingrese su opción (1-3): " metodo_instalacion
-            case $metodo_instalacion in
+            read -p "Ingrese su opción (1-3): " modo_de_instalacion
+            case $modo_de_instalacion in
                 1)
                     echo -e "${CIAN}Instalando Samba usando comandos manuales...${RESET}"
                     echo "Manito."
