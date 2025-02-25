@@ -41,10 +41,10 @@ while true; do
     echo "7. Reiniciar servicio ${RESTART}"
     echo "8. Salir ${EXIT}"
 
-    # absolute
+    # absolute cinema
     read -p "Ingrese su opción (1-8): " option
 
-    # cinema
+   
     case $option in
         1)
             echo -e "${INSTALL} === Menú instalación ==="
@@ -131,6 +131,6 @@ while true; do
             ;;
     esac
 
-    # let him/her cook
+    
     read -p "Presione Enter para continuar..."
 done
