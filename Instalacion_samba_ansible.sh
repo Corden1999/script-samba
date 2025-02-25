@@ -1,4 +1,4 @@
-#!/bin/bash
+ho#!/bin/bash
 
 if command -v ansible &> /dev/null; then
   echo "Ansible esta instalado"
@@ -21,18 +21,14 @@ else
     exit 1
   fi
 fi
-
-
-mkdir -p ~/ansible-project/{inventory,playbooks,roles}
-cd ~/ansible-project
-while $
-cat 
-
+echo "Iniciando configuración";
 
 read -p "Dime el nombre del recurso compartido: " nombre
 read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
 read -p "Dime el nombre de usuario para samba: " usuario
 read -p "Dime la contraseña para el usuario: " contrasena
+
+
 
 if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
   echo "Tiene algun valor vacio"
