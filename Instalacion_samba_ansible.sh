@@ -26,7 +26,8 @@ if command -v ansible &> /dev/null; then
   fi
 else
   echo "Instalando ansible"
-  sudo apt update
+  sudo apt-get update -y
+  sudo apt upgrade -y
   sudo apt install -y ansible
 
   if command -v ansible &> /dev/null; then
