@@ -2,16 +2,10 @@
 - name: Instalar y configurar Samba en Ubuntu
   hosts: all
   become: yes
-  vars:
-    nombre: "mis_archivos"
-    ruta: "/srv/samba/share"
-    usuario: "usuario_samba"
-    contrasena: "contraseña_segura"
-    
-  task:
+  tasks:
     - name: Instalar Samba
       apt: 
-        name: Samba 
+        name: samba 
         update_cache: yes 
         state: latest 
 
