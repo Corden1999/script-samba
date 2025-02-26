@@ -52,24 +52,27 @@ instalar_samba() {
     # Crear una carpeta compartida
     echo "Creando una carpeta compartida..."
     read -p "¿Dónde quieres crear la carpeta compartida? " ruta
+
+    # Validar que no esté vacía
+    if [[ -z "$ruta" ]]; then
+        echo -e "${CROSS_MARK} ${ROJO}Error: No ingresaste una ruta válida.${RESET}"
+        exit 1
+    fi
+
+    # Crear carpeta con permisos correctos
     sudo mkdir -p "$ruta"
     sudo chmod -R 777 "$ruta"
     echo "Archivo de prueba" > "$ruta/Readme.txt"
 
     # Configurar Samba para compartir la carpeta
     echo "Configurando Samba..."
-    sudo bash -c "cat >> /etc/samba/smb.conf <<EOF
-[Carpeta_compartida]
-   comment = samba grupo cristian, pablo y mario
-   path = $ruta
-   browsable = yes
-   read only = no
-EOF"
+    sudo bash -c "echo -e '[Carpeta_compartida]\n   comment = samba grupo cristian, pablo y mario\n   path = $ruta\n   browsable = yes\n   read only = no\n   guest ok = no\n   valid users = root' >> /etc/samba/smb.conf"
 
     # Poner contraseña del usuario administrador
     echo "Configurando la contraseña del administrador..."
-    sudo smbpasswd -x root 2>/dev/null
-    sudo useradd -M -s /sbin/nologin root 2>/dev/null
+    if ! sudo pdbedit -L | grep -q "^root:"; then
+        sudo smbpasswd -a root
+    fi
     (echo "12345"; echo "12345") | sudo smbpasswd -a -s root
 
     # Reiniciar el servicio de Samba
