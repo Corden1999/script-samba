@@ -84,8 +84,6 @@ EOF"
     echo "El directorio compartido está en: $ruta"
     echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
 }
-    echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
-}
 
 # Función para instalar Samba con ansibe¡le
 instalar_samba_ansible() {
