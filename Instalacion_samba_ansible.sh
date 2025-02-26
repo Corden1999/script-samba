@@ -23,6 +23,7 @@ if command -v ansible &> /dev/null; then
         -e "ruta=$ruta" \
         -e "usuario=$usuario" \
         -e "contrasena=$contrasena"
+        exit 1
      fi
   fi
 else
@@ -39,16 +40,15 @@ else
   fi
 fi
 echo "Iniciando configuración";
-ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
 read -p "Dime el directorio del inventario: " inventario
 inventario=${inventario:-./inventario/hosts}
 read -p "Que usuario quieres para aceder en remoto: " usuario
 usuario=${usuario:-root}
+ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
 read -p "¿Quieres agregar host y-n ?" host
 host=${host:-y}
 mkdir -p "$(dirname "$inventario")"
 if [[ $host =~ ^[Yy]$ ]]; then
-
   while true; do
         read -p "Dime el nombre del grupo ('exit' para salir): " grupo
         if [[ "$grupo" == "exit" ]]; then
