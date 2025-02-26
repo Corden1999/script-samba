@@ -1,23 +1,23 @@
 #!/bin/bash
 
-#Actualizacion del sistema
+# Actualización del sistema
 echo "Actualizando el sistema..."
 sudo apt-get update -y && sudo apt-get upgrade -y
 
-#Instalacion de samba 
+# Instalación de Samba
 echo "Instalando Samba..."
 sudo apt-get install samba -y
 
-#Crear una carpeta compartida
+# Crear una carpeta compartida
 echo "Creando una carpeta compartida..."
-read -p "Donde Quieres crear la carpeta compartida?" ruta
+read -p "¿Dónde quieres crear la carpeta compartida? " ruta
 sudo mkdir -p "$ruta"
 sudo chmod -R 777 "$ruta"
-ruta2 = "$ruta/Readme.txt"
-echo "Archivo de prueba" >> $ruta2
+ruta2="$ruta/Readme.txt"
+echo "Archivo de prueba" >> "$ruta2"
 
-#Configurar Samba para compartir la carpeta
-echo "configurando samba..."
+# Configurar Samba para compartir la carpeta
+echo "Configurando Samba..."
 sudo bash -c 'cat >> /etc/samba/smb.conf' <<EOF
 [Carpeta_compartida]
    comment = samba grupo cristian, pablo y mario
@@ -26,8 +26,12 @@ sudo bash -c 'cat >> /etc/samba/smb.conf' <<EOF
    read only = no
 EOF
 
-#Reiniciar el servicio de samba
-echo "Reiniciando el servivio de samba..."
+# Poner contraseña del usuario administrador
+echo "Configurando la contraseña del administrador..."
+(echo "12345"; echo "12345") | sudo smbpasswd -a -s root
+
+# Reiniciar el servicio de Samba
+echo "Reiniciando el servicio de Samba..."
 sudo systemctl restart smbd
 
 # Verificar el estado del servicio
