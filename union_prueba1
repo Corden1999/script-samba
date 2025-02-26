@@ -38,62 +38,55 @@ limpiar_pantalla() {
 
 # Función para instalar Samba usando comandos manuales
 instalar_samba() {
-    echo -e "${CIAN}Instalando Samba usando comandos manuales...${RESET}"
+   #!/bin/bash
 
-    # Actualización del sistema
-    echo "Actualizando el sistema..."
-    sudo apt-get update -y && sudo apt-get upgrade -y
+# Actualización del sistema
+echo "Actualizando el sistema..."
+sudo apt-get update -y && sudo apt-get upgrade -y
 
-    # Instalación de Samba
-    echo "Instalando Samba..."
-    sudo apt-get install samba -y
+# Instalación de Samba
+echo "Instalando Samba..."
+sudo apt-get install samba -y
 
-    # Crear una carpeta compartida
-    echo "Creando una carpeta compartida..."
-    read -p "¿Dónde quieres crear la carpeta compartida? " ruta
+# Crear una carpeta compartida
+echo "Creando una carpeta compartida..."
+read -p "¿Dónde quieres crear la carpeta compartida? " ruta
+sudo mkdir -p "$ruta"
+sudo chmod -R 777 "$ruta"
+ruta2="$ruta/Readme.txt"
+echo "Archivo de prueba" >> "$ruta2"
 
-    # Validar que no esté vacía
-    if [[ -z "$ruta" ]]; then
-        echo -e "${CROSS_MARK} ${ROJO}Error: No ingresaste una ruta válida.${RESET}"
-        exit 1
-    fi
-
-    # Crear carpeta con permisos correctos
-    sudo mkdir -p "$ruta"
-    sudo chmod -R 775 "$ruta"
-    sudo chown -R root:root "$ruta"
-    echo "Archivo de prueba" > "$ruta/Readme.txt"
-
-    # Configurar Samba para compartir la carpeta
-    echo "Configurando Samba..."
-    sudo bash -c "cat >> /etc/samba/smb.conf" << EOF
-[Carpeta_compartida]
+# Configurar Samba para compartir la carpeta
+echo "Configurando Samba..."
+sudo bash -c 'cat >> /etc/samba/smb.conf' <<EOF
+   [Carpeta_compartida]
    comment = samba grupo cristian, pablo y mario
    path = $ruta
    browsable = yes
    read only = no
-   guest ok = no
-   valid users = root
 EOF
 
-    # Poner contraseña del usuario administrador
-    echo "Configurando la contraseña del administrador..."
-    if ! sudo pdbedit -L | grep -q "^root:"; then
-        sudo smbpasswd -a root
-    fi
-    (echo "12345"; echo "12345") | sudo smbpasswd -a -s root
+# Poner contraseña del usuario administrador
+echo "Configurando la contraseña del administrador..."
+(echo "12345"; echo "12345") | sudo smbpasswd -a -s root
 
-    # Reiniciar el servicio de Samba
-    echo "Reiniciando el servicio de Samba..."
-    sudo systemctl restart smbd
+# Reiniciar el servicio de Samba
+echo "Reiniciando el servicio de Samba..."
+sudo systemctl restart smbd
 
-    # Verificar el estado del servicio
-    echo "Verificando el estado del servicio Samba..."
-    sudo systemctl status smbd --no-pager
+# Verificar el estado del servicio
+echo "Verificando el estado del servicio Samba..."
+sudo systemctl status smbd
 
-    echo "Instalación y configuración de Samba completada."
-    echo "El directorio compartido está en: $ruta"
-    echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
+echo "Instalación y configuración de Samba completada."
+echo "El directorio compartido está en: $ruta"
+
+echo "Actualizando la lista de paquetes..."
+sudo apt update
+echo "Actualizando los paquetes instalados..."
+sudo apt upgrade -y
+echo "Limpiando paquetes innecesarios..."
+sudo apt autoremove -y
 }
 
 # Función para instalar Samba con Ansible
