@@ -179,7 +179,7 @@ else
   echo "Error: No se pudo conectar al host remoto."
 fi
 echo "Ansible instalado y configurado correctamente"
-
+}
 #instalar samba con ¡docker
 instalar_samba_con_docker(){
 #!/bin/bash
