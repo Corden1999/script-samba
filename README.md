@@ -17,66 +17,103 @@ Además de compartir recursos, Samba puede funcionar como un controlador de domi
 
 -**Servidor de respaldo y almacenamiento centralizado:** Samba puede usarse como un servidor de almacenamiento de archivos o un NAS (Network Attached Storage), donde los usuarios de una red pueden almacenar y acceder a copias de seguridad, archivos compartidos o documentos importantes.
 
-## Requisitos del Sistema
+## Descripción
 
-- **Sistema Operativo**: Linux/Unix (Ubuntu, Debian, CentOS, etc.)
-- **Dependencias**: `samba`, `smbclient`, `winbind` (opcional para integración con Active Directory)
-- **Permisos**: Acceso de superusuario (root) para la instalación y configuración.
+Este script en Bash permite instalar, configurar y administrar Samba en un sistema Linux. Proporciona tres opciones de instalación:
 
-## Instalación
+1. **Instalación manual** mediante comandos de `apt`.
+2. **Instalación automatizada con Ansible**.
+3. **Instalación en un contenedor Docker**.
 
-1. **Instalar Samba**:
-   ```bash
-   sudo apt-get update
-   sudo apt-get install samba smbclient
-   ```
+Además, incluye opciones para iniciar, detener, reiniciar y eliminar el servicio Samba, así como visualizar registros y editar configuraciones.
 
-2. **Configurar Samba**:
-   - Edita el archivo de configuración `/etc/samba/smb.conf` para definir los recursos compartidos.
-   - A continuación, un ejemplo básico de configuración para compartir un directorio:
-     ```ini
-     [Compartido]
-     path = /ruta/al/directorio
-     browseable = yes
-     writable = yes
-     valid users = usuario
-     ```
+## Características
 
-3. **Reiniciar el servicio Samba**:
-   ```bash
-   sudo systemctl restart smbd
-   ```
+- Interfaz de menú interactivo con colores y emojis.
+- Instalación y configuración automática de Samba.
+- Creación de un recurso compartido.
+- Posibilidad de instalación con Ansible o Docker.
+- Gestor de logs y opciones de administración del servicio.
 
-4. **Añadir usuarios de Samba**:
-   ```bash
-   sudo smbpasswd -a usuario
-   ```
+## Requisitos
+
+- Linux (Debian/Ubuntu).
+- Privilegios de `sudo`.
+- Conexión a Internet para instalar paquetes.
+
+### Dependencias (según el método de instalación):
+
+- **Instalación manual:** `samba`
+- **Instalación con Ansible:** `ansible`
+- **Instalación con Docker:** `docker`
 
 ## Uso
 
-- **Acceder a recursos compartidos desde Windows**:
-  - Abre el Explorador de Archivos y en la barra de direcciones escribe `\\ip_del_servidor`.
-  - Introduce las credenciales del usuario de Samba cuando se te solicite.
+Ejecuta el script con:
 
-- **Acceder a recursos compartidos desde Linux**:
-  - Usa el comando `smbclient` para conectarte a un recurso compartido:
-    ```bash
-    smbclient //ip_del_servidor/Compartido -U usuario
-    ```
-
-## Contribuciones
-
-¡Las contribuciones son bienvenidas! Si deseas mejorar este proyecto, por favor sigue estos pasos:
-
-1. Haz un fork del repositorio.
-2. Crea una rama para tu nueva característica (`git checkout -b nueva-caracteristica`).
-3. Realiza tus cambios y haz commit (`git commit -am 'Añade nueva caracteristica'`).
-4. Haz push a la rama (`git push origin nueva-caracteristica`).
-5. Abre un Pull Request.
-
-## Contacto
-
-Si tienes alguna pregunta o sugerencia, no dudes en contactarme a través de [mi correo electrónico](mailto:c.alejandro57175@gmail.com).
+```bash
+bash menu.sh
 ```
 
-¡Listo! Ahora puedes copiar y pegar este contenido directamente en tu archivo `README.md` en GitHub. 😊
+### Opciones del Menú
+
+1. **Instalar Samba**
+   - Instalación manual
+   - Instalación con Ansible
+   - Instalación con Docker
+2. **Eliminar Samba**
+3. **Iniciar el servicio Samba**
+4. **Detener el servicio Samba**
+5. **Consultar logs de Samba**
+6. **Editar configuración de Samba**
+7. **Reiniciar el servicio Samba**
+8. **Salir**
+
+## Configuración
+
+El script solicita la ruta de la carpeta compartida y la configura en `/etc/samba/smb.conf` de la siguiente manera:
+
+```ini
+[Carpeta_compartida]
+comment = samba grupo cristian, pablo y mario
+path = /ruta/del/recurso
+browsable = yes
+read only = no
+```
+
+Para acceder al recurso compartido, usa:
+
+```bash
+smbclient -L //IP_DEL_SERVIDOR
+```
+
+## Instalación con Docker
+
+Si se elige Docker, el script:
+
+1. Instala Docker si no está instalado.
+2. Descarga una imagen de Ubuntu.
+3. Configura un contenedor con Samba.
+4. Comparte una carpeta dentro del contenedor.
+
+## Instalación con Ansible
+
+Si se elige Ansible, el script:
+
+1. Verifica si Ansible está instalado.
+2. Configura el inventario y las claves SSH.
+3. Ejecuta `Instalacion_samba_ansible.yml` para configurar Samba en hosts remotos.
+
+## Notas
+
+- Se recomienda revisar la configuración de firewall y permisos de red para garantizar la accesibilidad del recurso compartido.
+- El script crea un usuario `root` en Samba con contraseña `12345` por defecto (puede ser modificada en el código).
+
+## Autor
+
+Grupo: Cristian, Pablo y Mario.
+
+---
+
+### En honor a las 9 máquinas de Ubuntu perdidas y 3 Windows en el proceso.
+
