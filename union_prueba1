@@ -79,6 +79,7 @@ EOF
     echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
 }
 
+# Función para instalar Samba con ansibe¡le
 while true; do
     limpiar_pantalla
 
