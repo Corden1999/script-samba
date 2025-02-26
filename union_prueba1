@@ -40,46 +40,50 @@ limpiar_pantalla() {
 # Función para instalar Samba usando comandos manuales
 instalar_samba() {
     echo -e "${CIAN}Instalando Samba usando comandos manuales...${RESET}"
+
     # Actualización del sistema
-echo "Actualizando el sistema..."
-sudo apt-get update -y && sudo apt-get upgrade -y
+    echo "Actualizando el sistema..."
+    sudo apt-get update -y && sudo apt-get upgrade -y
 
-# Instalación de Samba
-echo "Instalando Samba..."
-sudo apt-get install samba -y
+    # Instalación de Samba
+    echo "Instalando Samba..."
+    sudo apt-get install samba -y
 
-# Crear una carpeta compartida
-echo "Creando una carpeta compartida..."
-read -p "¿Dónde quieres crear la carpeta compartida? " ruta
-sudo mkdir -p "$ruta"
-sudo chmod -R 777 "$ruta"
-ruta2="$ruta/Readme.txt"
-echo "Archivo de prueba" >> "$ruta2"
+    # Crear una carpeta compartida
+    echo "Creando una carpeta compartida..."
+    read -p "¿Dónde quieres crear la carpeta compartida? " ruta
+    sudo mkdir -p "$ruta"
+    sudo chmod -R 777 "$ruta"
+    echo "Archivo de prueba" > "$ruta/Readme.txt"
 
-# Configurar Samba para compartir la carpeta
-echo "Configurando Samba..."
-sudo bash -c 'cat >> /etc/samba/smb.conf' <<EOF
+    # Configurar Samba para compartir la carpeta
+    echo "Configurando Samba..."
+    sudo bash -c "cat >> /etc/samba/smb.conf <<EOF
 [Carpeta_compartida]
    comment = samba grupo cristian, pablo y mario
    path = $ruta
    browsable = yes
    read only = no
-EOF
+EOF"
 
-# Poner contraseña del usuario administrador
-echo "Configurando la contraseña del administrador..."
-(echo "12345"; echo "12345") | sudo smbpasswd -a -s root
+    # Poner contraseña del usuario administrador
+    echo "Configurando la contraseña del administrador..."
+    sudo smbpasswd -x root 2>/dev/null
+    sudo useradd -M -s /sbin/nologin root 2>/dev/null
+    (echo "12345"; echo "12345") | sudo smbpasswd -a -s root
 
-# Reiniciar el servicio de Samba
-echo "Reiniciando el servicio de Samba..."
-sudo systemctl restart smbd
+    # Reiniciar el servicio de Samba
+    echo "Reiniciando el servicio de Samba..."
+    sudo systemctl restart smbd
 
-# Verificar el estado del servicio
-echo "Verificando el estado del servicio Samba..."
-sudo systemctl status smbd
+    # Verificar el estado del servicio
+    echo "Verificando el estado del servicio Samba..."
+    sudo systemctl status smbd --no-pager
 
-echo "Instalación y configuración de Samba completada."
-echo "El directorio compartido está en: $ruta"
+    echo "Instalación y configuración de Samba completada."
+    echo "El directorio compartido está en: $ruta"
+    echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
+}
     echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
 }
 
