@@ -52,7 +52,7 @@ Además, incluye opciones para iniciar, detener, reiniciar y eliminar el servici
 Ejecuta el script con:
 
 ```bash
-bash menu.sh
+./menu.sh
 ```
 
 ### Opciones del Menú
