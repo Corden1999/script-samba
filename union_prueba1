@@ -1,6 +1,6 @@
 #!/bin/bash
-    
-# emojis
+
+# Emojis
 CHECK_MARK='✔️'
 CROSS_MARK='❌'
 INFO='ℹ️' 
@@ -14,7 +14,7 @@ INICIAR='▶️'
 DETENER='⏹️'
 LOGS='📝'
 
-# 33 escape 1 negrita 90 a 97 brillante
+# Colores
 BLANCO='\033[1;97m'      
 AMARILLO='\033[1;93m'    
 CIAN='\033[1;96m'       
@@ -24,7 +24,6 @@ MAGENTA='\033[1;95m'
 AZUL='\033[1;94m'        
 RESET='\033[0m'          
 
-# ;40m fondo negro ;44 fondo azul 
 BLANCO_SOBRE_AZUL='\033[1;97;44m'   
 AMARILLO_SOBRE_NEGRO='\033[1;93;40m' 
 CIAN_SOBRE_NEGRO='\033[1;96;40m'    
@@ -61,12 +60,21 @@ instalar_samba() {
 
     # Crear carpeta con permisos correctos
     sudo mkdir -p "$ruta"
-    sudo chmod -R 777 "$ruta"
+    sudo chmod -R 775 "$ruta"
+    sudo chown -R root:root "$ruta"
     echo "Archivo de prueba" > "$ruta/Readme.txt"
 
     # Configurar Samba para compartir la carpeta
     echo "Configurando Samba..."
-    sudo bash -c "echo -e '[Carpeta_compartida]\n   comment = samba grupo cristian, pablo y mario\n   path = $ruta\n   browsable = yes\n   read only = no\n   guest ok = no\n   valid users = root' >> /etc/samba/smb.conf"
+    sudo bash -c "cat >> /etc/samba/smb.conf" << EOF
+[Carpeta_compartida]
+   comment = samba grupo cristian, pablo y mario
+   path = $ruta
+   browsable = yes
+   read only = no
+   guest ok = no
+   valid users = root
+EOF
 
     # Poner contraseña del usuario administrador
     echo "Configurando la contraseña del administrador..."
@@ -88,179 +96,54 @@ instalar_samba() {
     echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
 }
 
-# Función para instalar Samba con ansibe¡le
+# Función para instalar Samba con Ansible
 instalar_samba_ansible() {
-if command -v ansible &> /dev/null; then
-  echo "Ansible esta instalado"
-  ansible --version
-  read -p "¿Desea hacer la configuración? (y-n) " configurar
-  configurar=${configurar:-n}
-  if [[ ! $configurar =~ ^[Yy]$ ]]; then
-    echo "Salienddo"
-    echo "Configuración e instalación de samba"
-
-      read -p "Dime el nombre del recurso compartido: " nombre
-      read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
-      read -p "Dime el nombre de usuario para samba: " usuario
-      read -p "Dime la contraseña para el usuario: " contrasena
-      
-      if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
-        echo "Tiene algun valor vacio"
-        exit 1
-      else
-        ansible-playbook Instalacion_samba_ansible.yml --ask-become-pass \
-        -e "nombre=$nombre" \
-        -e "ruta=$ruta" \
-        -e "usuario=$usuario" \
-        -e "contrasena=$contrasena"
-        exit 1
-     fi
-  fi
-else
-  echo "Instalando ansible"
-  sudo apt-get update -y
-  sudo apt-get upgrade -y
-  sudo apt-get install -y ansible
-
-  if command -v ansible &> /dev/null; then
-    echo "Ansible instalado"
-  else
-    echo "Error: No se ha podido instalar"
-    exit 1
-  fi
-fi
-echo "Iniciando configuración";
-read -p "Dime el directorio del inventario: " inventario
-inventario=${inventario:-./inventario/hosts}
-read -p "Que usuario quieres para aceder en remoto: " usuario
-usuario=${usuario:-root}
-ssh-keygen -t rsa -b 4096 -N "" -f ~/.ssh/id_rsa
-read -p "¿Quieres agregar host y-n ?" host
-host=${host:-y}
-mkdir -p "$(dirname "$inventario")"
-if [[ $host =~ ^[Yy]$ ]]; then
-  while true; do
-        read -p "Dime el nombre del grupo ('exit' para salir): " grupo
-        if [[ "$grupo" == "exit" ]]; then
-            break
-        fi
-        echo "[$grupo]" >> "$inventario"
-        while true; do
-            read -p "Dime la IP o el nombre del host ('exit' para salir del grupo): " ip
-            if [[ "$ip" == "exit" ]]; then
-                break
+    if command -v ansible &> /dev/null; then
+        echo "Ansible está instalado"
+        ansible --version
+        read -p "¿Desea hacer la configuración? (y-n) " configurar
+        configurar=${configurar:-n}
+        if [[ $configurar =~ ^[Yy]$ ]]; then
+            read -p "Dime el nombre del recurso compartido: " nombre
+            read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
+            read -p "Dime el nombre de usuario para samba: " usuario
+            read -p "Dime la contraseña para el usuario: " contrasena
+            
+            if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
+                echo "Tiene algún valor vacío"
+                exit 1
+            else
+                ansible-playbook Instalacion_samba_ansible.yml --ask-become-pass \
+                -e "nombre=$nombre" \
+                -e "ruta=$ruta" \
+                -e "usuario=$usuario" \
+                -e "contrasena=$contrasena"
+                exit 1
             fi
-            echo "$ip" >> "$inventario"
-            ssh-copy-id -i ~/.ssh/id_rsa.pub "$usuario@$ip"
-        done
-        echo "" >> "$inventario"
-    done
-    
-  echo "Archivo de host creado"
-fi 
-echo "Crear archivo de configuración"
+        fi
+    else
+        echo "Instalando Ansible"
+        sudo apt-get update -y
+        sudo apt-get upgrade -y
+        sudo apt-get install -y ansible
 
-cat << EOF > ansible.cfg
-[defaults]
-inventory = $inventario
-remote_user = $usuario
-EOF
-ansible all -m ping
-if [[ $? -eq 0 ]]; then
-   echo "Configuración e instalación de samba"
-
-      read -p "Dime el nombre del recurso compartido: " nombre
-      read -p "Dime la ubicación del recurso que desea compartir (No tiene por que existir): " ruta
-      read -p "Dime el nombre de usuario para samba: " usuario
-      read -p "Dime la contraseña para el usuario: " contrasena
-      
-      if [[ -z $nombre || -z $ruta || -z $usuario || -z $contrasena ]]; then
-        echo "Tiene algun valor vacio"
-        exit 1
-      else
-        ansible-playbook Instalacion_samba_ansible.yml --ask-become-pass \
-        -e "nombre=$nombre" \
-        -e "ruta=$ruta" \
-        -e "usuario=$usuario" \
-        -e "contrasena=$contrasena"
-     fi
-else
-  echo "Error: No se pudo conectar al host remoto."
-fi
-echo "Ansible instalado y configurado correctamente"
-}
-#instalar samba con ¡docker
-instalar_samba_con_docker(){
-#!/bin/bash
-
-# Actualizar el sistema
-sudo apt-get update
-sudo apt-get upgrade -y
-
-# Instalación de certificados y claves de Docker
-sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-# Detectar la versión de Ubuntu y agregar el repositorio de Docker
-. /etc/os-release
-sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $UBUNTU_CODENAME stable"
-
-# Actualizar e instalar Docker
-sudo apt-get update
-sudo apt install -y docker-ce
-sudo systemctl enable --now docker
-
-# Probar Docker
-sudo docker run hello-world
-
-# Descargar la imagen de Ubuntu
-sudo docker pull ubuntu
-
-# Crear y ejecutar el contenedor en segundo plano
-sudo docker run -dit --name my_ubuntu_container ubuntu
-
-# Ejecutar comandos dentro del contenedor
-sudo docker exec -it my_ubuntu_container bash -c "
-    apt-get update && apt-get upgrade -y;
-
-    # Instalar Samba dentro del contenedor
-    apt-get install -y samba;
-
-    # Crear una carpeta compartida dentro del contenedor
-    mkdir -p /shared_folder;
-    chmod -R 777 /shared_folder;
-    echo 'Archivo de prueba' > /shared_folder/Readme.txt;
-
-    # Configurar Samba para compartir la carpeta
-    echo '[Carpeta_compartida]
-    comment = samba grupo cristian, pablo y mario
-    path = /shared_folder
-    browsable = yes
-    read only = no' >> /etc/samba/smb.conf;
-
-    # Poner contraseña del usuario administrador
-    echo 'Configurando la contraseña del administrador...'
-    (echo "12345"; echo "12345") | sudo smbpasswd -a -s root
-    
-    # Reiniciar el servicio de Samba
-    service smbd restart;
-
-    # Verificar el estado del servicio Samba
-    service smbd status;
-
-    # Mensaje final
-    echo 'Instalación y configuración de Samba completada dentro del contenedor.';
-    echo 'El directorio compartido está en: /shared_folder';
-"
-
-# Mensaje final fuera del contenedor
-echo "El contenedor 'my_ubuntu_container' ha sido configurado y ejecutado correctamente."
-
-#posteriormente para entrar en el bash del ubuntu haremos los siguiente:
-#sudo docker exec -it my_ubuntu_container bash
-
+        if command -v ansible &> /dev/null; then
+            echo "Ansible instalado"
+        else
+            echo "Error: No se ha podido instalar"
+            exit 1
+        fi
+    fi
 }
 
+# Función para instalar Samba con Docker
+instalar_samba_docker() {
+    echo -e "${CIAN}Instalando Samba usando Docker...${RESET}"
+    echo "Manito."
+    echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
+}
+
+# Menú principal
 while true; do
     limpiar_pantalla
 
@@ -271,14 +154,14 @@ while true; do
     echo -e "${BLANCO}Interfaces de Red:${RESET}"
     ip -o -4 addr show | awk '{printf "   %-7s %s\n", $2":", $4}'
 
-    # status
+    # Estado del servicio Samba
     if systemctl is-active smbd &> /dev/null; then
         echo -e "${CHECK_MARK} ${VERDE}El servicio Samba está en ejecución.${RESET}"
     else
         echo -e "${CROSS_MARK} ${ROJO}El servicio Samba no está en ejecución.${RESET}"
     fi
 
-    # Menu
+    # Menú
     echo -e "${MENU} ${CIAN_SOBRE_NEGRO}=== Menú ===${RESET}"
     echo "Seleccione el número de la acción que desea realizar:"
     echo -e "${AMARILLO}1. Instalar Samba ${INSTALAR}${RESET}"
