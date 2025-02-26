@@ -63,6 +63,15 @@ sudo docker exec -it my_ubuntu_container bash -c "
 # Mensaje final fuera del contenedor
 echo "El contenedor 'my_ubuntu_container' ha sido configurado y ejecutado correctamente."
 
+# Actualización de software para Ubuntu
+echo "Actualizando la lista de paquetes..."
+sudo apt update
+echo "Actualizando los paquetes instalados..."
+sudo apt upgrade -y
+echo "Limpiando paquetes innecesarios..."
+sudo apt autoremove -y
+
+
 #posteriormente para entrar en el bash del ubuntu haremos los siguiente:
 #sudo docker exec -it my_ubuntu_container bash
 
