@@ -80,6 +80,7 @@ EOF
 }
 
 # Función para instalar Samba con ansibe¡le
+instalar_samba_ansible() {
 if command -v ansible &> /dev/null; then
   echo "Ansible esta instalado"
   ansible --version
@@ -224,9 +225,7 @@ while true; do
                     instalar_samba
                     ;;
                 2)
-                    echo -e "${CIAN}Instalando Samba usando Ansible...${RESET}"
-                    echo "Pablito."
-                    echo -e "${CHECK_MARK} ${VERDE}Samba instalado correctamente.${RESET}"
+                    instalar_samba_ansible
                     ;;
                 3)
                     echo -e "${CIAN}Instalando Samba usando Docker...${RESET}"
