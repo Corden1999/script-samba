@@ -40,3 +40,10 @@ sudo systemctl status smbd
 
 echo "Instalación y configuración de Samba completada."
 echo "El directorio compartido está en: $ruta"
+
+echo "Actualizando la lista de paquetes..."
+sudo apt update
+echo "Actualizando los paquetes instalados..."
+sudo apt upgrade -y
+echo "Limpiando paquetes innecesarios..."
+sudo apt autoremove -y
