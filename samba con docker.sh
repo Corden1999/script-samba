@@ -45,6 +45,10 @@ sudo docker exec -it my_ubuntu_container bash -c "
     browsable = yes
     read only = no' >> /etc/samba/smb.conf;
 
+    # Poner contraseña del usuario administrador
+    echo "Configurando la contraseña del administrador..."
+    (echo "12345"; echo "12345") | sudo smbpasswd -a -s root
+    
     # Reiniciar el servicio de Samba
     service smbd restart;
 
