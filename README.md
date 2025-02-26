@@ -6,13 +6,16 @@ Samba es un software de código abierto que implementa el protocolo SMB/CIFS, pe
 
 Además de compartir recursos, Samba puede funcionar como un controlador de dominio, gestionando usuarios y permisos en una red, similar a un servidor Windows. Esto lo convierte en una herramienta esencial para empresas u organizaciones que buscan una solución flexible y económica para administrar redes heterogéneas, ofreciendo una alternativa eficiente para conectar diversos sistemas operativos en un entorno colaborativo.
 
-## Características Principales
+## ¿Para qué podemos usar el servidor samba?
+-**Compartición de archivos:** Samba permite que los archivos almacenados en servidores Linux/Unix sean accesibles por usuarios de Windows y viceversa. Esto facilita la colaboración en redes heterogéneas, permitiendo a los usuarios compartir, leer y escribir archivos entre diferentes sistemas sin problemas de compatibilidad.
 
-- **Compartición de archivos**: Permite que los archivos almacenados en servidores Linux/Unix sean accesibles por usuarios de Windows y viceversa.
-- **Compartición de impresoras**: Comparte impresoras conectadas a un sistema Linux para que sean accesibles desde máquinas con Windows.
-- **Controlador de dominio**: Actúa como un Controlador de Dominio (DC), gestionando usuarios, permisos y autenticación en una red.
-- **Integración con Active Directory**: Permite a los sistemas Linux participar en dominios de Windows.
-- **Servidor de respaldo y almacenamiento centralizado**: Funciona como un servidor de almacenamiento de archivos o un NAS (Network Attached Storage).
+-**Compartición de impresoras:** Los servidores Samba pueden compartir impresoras conectadas a un sistema Linux para que sean accesibles desde máquinas con Windows. Esto es especialmente útil en oficinas donde se desea centralizar el acceso a impresoras desde múltiples plataformas.
+
+-**Controlador de dominio:** Samba puede actuar como un Controlador de Dominio (DC), similar a un servidor Windows con Active Directory. Esto permite gestionar usuarios, permisos y autenticación en una red, controlando el acceso a recursos de acuerdo con políticas establecidas.
+
+-**Integración con Active Directory:** Samba puede integrarse con un entorno Active Directory de Windows, permitiendo a los sistemas Linux participar en dominios de Windows. De esta manera, los usuarios pueden iniciar sesión y acceder a recursos con las mismas credenciales, facilitando la administración centralizada.
+
+-**Servidor de respaldo y almacenamiento centralizado:** Samba puede usarse como un servidor de almacenamiento de archivos o un NAS (Network Attached Storage), donde los usuarios de una red pueden almacenar y acceder a copias de seguridad, archivos compartidos o documentos importantes.
 
 ## Requisitos del Sistema
 
